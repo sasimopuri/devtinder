@@ -2,12 +2,14 @@ const express = require("express");
 const AuthMiddleWare = require("./src/utils/AuthMiddleware");
 const connectDB = require("./src/config/database");
 const Users = require("./src/models/userSchema");
+const { validateData } = require("./src/utils/validateSignUpData");
 const app = express();
 
 app.use(express.json());
 app.post("/signup", async (req, res) => {
   const user = Users(req.body);
   try {
+    validateData(user);
     await user.save();
     res.send("Added Successfully!");
   } catch (err) {
