@@ -57,11 +57,23 @@ app.delete("/deleteById", async (req, res) => {
   }
 });
 
-app.patch("/updateUser", async (req, res) => {
-  const userId = req.body.userId;
-  const body = req.body;
+app.patch("/updateUser/:userId", async (req, res) => {
+  const userId = req.params?.userId;
+  const body = req?.body;
+  const notAllowedFeilds = ["email"];
   try {
-    const response = await Users.findByIdAndUpdate(userId, body);
+    if (!body) {
+      throw new Error("No Parameters found");
+    }
+    Object.keys(body).every((k) => {
+      if (notAllowedFeilds.includes(k)) {
+        throw new Error("Email can't be changed!");
+      }
+    });
+
+    const response = await Users.findByIdAndUpdate(userId, body, {
+      runValidators: true,
+    });
     if (!response) {
       return res
         .status(404)
@@ -72,7 +84,7 @@ app.patch("/updateUser", async (req, res) => {
     res.send("Updated user Successfully!");
   } catch (err) {
     console.log("Error", err);
-    res.status(400).send("Unable to update the user details:(");
+    res.status(400).send(err.message);
   }
 });
 
