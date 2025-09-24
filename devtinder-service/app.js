@@ -64,14 +64,36 @@ app.patch("/updateUser", async (req, res) => {
   const userId = req.body.userId;
   const body = req.body;
   try {
-    const response = await Users.findByIdAndUpdate(userId,body);
-    if(!response){
-      return res.status(404).send("Unable to update please verify that the details entered are correct!")
+    const response = await Users.findByIdAndUpdate(userId, body);
+    if (!response) {
+      return res
+        .status(404)
+        .send(
+          "Unable to update please verify that the details entered are correct!"
+        );
     }
     res.send("Updated user Successfully!");
   } catch (err) {
     console.log("Error", err);
     res.status(400).send("Unable to update the user details:(");
+  }
+});
+
+app.patch("/forgetPassword", async (req, res) => {
+  const userId = req.body.userId;
+  const body = req.body;
+
+  try {
+    const response = await Users.findByIdAndUpdate(userId, body);
+    if (!response) {
+      return res.status(404).send("User not found");
+    }
+
+    res.send("Password reset is successfull!");
+  } catch (err) {
+    console.log("Error", err);
+
+    res.status(400).send("Unable to reset password please try again:(");
   }
 });
 
