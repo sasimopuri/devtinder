@@ -6,16 +6,13 @@ const app = express();
 
 app.use(express.json());
 app.post("/signup", async (req, res) => {
-  console.log("req", req.body);
   const user = Users(req.body);
   try {
     await user.save();
     res.send("Added Successfully!");
-  } catch {
-    (err) => {
-      console.log("Error Saving the data", err);
-      res.status(500).send("Error While Saving the Data!");
-    };
+  } catch (err) {
+    console.log("Error Saving the data", err);
+    res.status(500).send(err.message);
   }
 });
 
