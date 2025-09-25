@@ -2,14 +2,30 @@ const express = require("express");
 const AuthMiddleWare = require("./src/utils/AuthMiddleware");
 const connectDB = require("./src/config/database");
 const Users = require("./src/models/userSchema");
-const { validateData } = require("./src/utils/validateSignUpData");
+const {
+  validateSignUpData,
+  validateSignInData,
+} = require("./src/utils/validateBodyData");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 app.post("/signup", async (req, res) => {
-  const user = Users(req.body);
   try {
-    validateData(user);
+    const { firstName } = req.body;
+    console.log("fir", firstName, { firstName });
+
+    validateSignUpData(req.body);
+    const password = await bcrypt.hash(req.body.password, 10);
+    const user = Users({
+      ...req.body,
+      password: password,
+    });
+    // console.log(user);
+
     await user.save();
     res.send("Added Successfully!");
   } catch (err) {
@@ -18,16 +34,49 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    validateSignInData(req.body);
+    const user = await Users.findOne({ email });
+    if (!user) {
+      throw new Error("Email is not registered!");
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error("Incorrect password");
+    }
+    const token = await jwt.sign({ _id: user._id }, "secrectAnta");
+
+    res.cookie("token", token);
+    res.send("Logged in successfully!");
+  } catch (err) {
+    console.log("Error", err);
+
+    res.status(400).send(err.message);
+  }
+});
+
 app.get("/getUserDetails", async (req, res) => {
   try {
-    const userDetails = await Users.findOne({ email: req.body.email });
+    const token = req.cookies?.token;
+
+    if (!token) {
+      return res.status(401).send("Access denied. No token provided.");
+    }
+    const decodedToken = jwt.verify(token, "secrectAnta");
+    const userDetails = await Users.findById(decodedToken._id).select(
+      "-password"
+    );
     if (!userDetails) {
       return res.status(404).send("No user found!");
     }
     res.send(userDetails);
   } catch (err) {
     console.log("Error", err);
-    res.status(400).send("Unable to fetch user details :(");
+    res
+      .status(400)
+      .send("Unable to fetch user details. Invalid token or server error.");
   }
 });
 
