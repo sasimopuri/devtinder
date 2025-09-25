@@ -1,5 +1,4 @@
 const express = require("express");
-const AuthMiddleWare = require("./src/utils/AuthMiddleware");
 const connectDB = require("./src/config/database");
 const Users = require("./src/models/userSchema");
 const {
