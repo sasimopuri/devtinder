@@ -8,7 +8,7 @@ const {
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const {authValidator} = require("./src/utils/AuthValidator")
+const { authValidator } = require("./src/utils/AuthValidator");
 const app = express();
 
 app.use(express.json());
@@ -46,9 +46,13 @@ app.post("/login", async (req, res) => {
     if (!isPasswordValid) {
       throw new Error("Incorrect password");
     }
-    const token = await jwt.sign({ _id: user._id }, "secretAnta");
+    const token = await jwt.sign({ _id: user._id }, "secretAnta", {
+      expiresIn: "1d",
+    });
 
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      express: new Date(Date.now + 7 * 24 * 3600000),
+    });
     res.send("Logged in successfully!");
   } catch (err) {
     console.log("Error", err);
@@ -58,13 +62,12 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/getUserDetails", authValidator, async (req, res) => {
-  try{
+  try {
     const user = req.user;
-    res.json(user)
-  }
-  catch (err){
-    console.log("Error",err.message);
-    res.status(400).send("Error",err.message)
+    res.json(user);
+  } catch (err) {
+    console.log("Error", err.message);
+    res.status(400).send("Error", err.message);
   }
 });
 
