@@ -8,6 +8,7 @@ const {
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const {authValidator} = require("./src/utils/AuthValidator")
 const app = express();
 
 app.use(express.json());
@@ -45,7 +46,7 @@ app.post("/login", async (req, res) => {
     if (!isPasswordValid) {
       throw new Error("Incorrect password");
     }
-    const token = await jwt.sign({ _id: user._id }, "secrectAnta");
+    const token = await jwt.sign({ _id: user._id }, "secretAnta");
 
     res.cookie("token", token);
     res.send("Logged in successfully!");
@@ -56,26 +57,14 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/getUserDetails", async (req, res) => {
-  try {
-    const token = req.cookies?.token;
-
-    if (!token) {
-      return res.status(401).send("Access denied. No token provided.");
-    }
-    const decodedToken = jwt.verify(token, "secrectAnta");
-    const userDetails = await Users.findById(decodedToken._id).select(
-      "-password"
-    );
-    if (!userDetails) {
-      return res.status(404).send("No user found!");
-    }
-    res.send(userDetails);
-  } catch (err) {
-    console.log("Error", err);
-    res
-      .status(400)
-      .send("Unable to fetch user details. Invalid token or server error.");
+app.get("/getUserDetails", authValidator, async (req, res) => {
+  try{
+    const user = req.user;
+    res.json(user)
+  }
+  catch (err){
+    console.log("Error",err.message);
+    res.status(400).send("Error",err.message)
   }
 });
 
