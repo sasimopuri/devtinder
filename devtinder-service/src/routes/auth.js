@@ -24,7 +24,7 @@ authRouter.post("/signup", async (req, res) => {
   }
 });
 
-authRouter.post("/login", async (req, res) => {    
+authRouter.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     validateSignInData(req.body);
@@ -38,13 +38,22 @@ authRouter.post("/login", async (req, res) => {
     }
     const token = await user.getJWT();
     res.cookie("token", token, {
-      express: new Date(Date.now + 7 * 24 * 3600000),
+      expires: new Date(Date.now() + 7 * 24 * 3600000),
     });
     res.send("Logged in successfully!");
   } catch (err) {
     console.log("Error", err);
     res.status(400).send(err.message);
   }
+});
+
+// authRouter.get("/logout", (req,res) => {
+//   res.cookie("token", "", { expires: new Date(Date.now()) });
+//   res.send("Logout successfull!")
+// });
+authRouter.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.send("Logout successfull!");
 });
 
 module.exports = { authRouter };
