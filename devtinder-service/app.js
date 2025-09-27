@@ -46,7 +46,7 @@ app.post("/login", async (req, res) => {
     if (!isPasswordValid) {
       throw new Error("Incorrect password");
     }
-    const token = user.getJWT();
+    const token = await user.getJWT();
     res.cookie("token", token, {
       express: new Date(Date.now + 7 * 24 * 3600000),
     });
@@ -58,7 +58,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/getUserDetails", authValidator, async (req, res) => {
+app.get("/profile", authValidator, async (req, res) => {
   try {
     const user = req.user;
     res.json(user);
