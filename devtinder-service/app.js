@@ -46,10 +46,7 @@ app.post("/login", async (req, res) => {
     if (!isPasswordValid) {
       throw new Error("Incorrect password");
     }
-    const token = await jwt.sign({ _id: user._id }, "secretAnta", {
-      expiresIn: "1d",
-    });
-
+    const token = user.getJWT();
     res.cookie("token", token, {
       express: new Date(Date.now + 7 * 24 * 3600000),
     });
