@@ -5,7 +5,7 @@ const requestRouter = express.Router();
 const Users = require("../models/userSchema");
 
 requestRouter.post(
-  "/connection/:action/:id",
+  "/send/:action/:id",
   authValidator,
   async (req, res) => {
     try {
