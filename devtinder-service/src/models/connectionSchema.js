@@ -1,13 +1,16 @@
 const mongoose = require("mongoose");
+const Users = require("./userSchema");
 const connectionSchema = new mongoose.Schema(
   {
     fromUserId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: Users
     },
     toUserId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: Users
     },
     status: {
       type: String,
