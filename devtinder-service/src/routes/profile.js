@@ -1,5 +1,5 @@
 const express = require("express");
-const { authValidator } = require("../utils/AuthValidator");
+const { authValidator } = require("../middleware/AuthValidator");
 const profileRouter = express.Router();
 const Users = require("../models/userSchema")
 

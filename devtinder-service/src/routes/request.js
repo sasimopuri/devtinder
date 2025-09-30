@@ -1,5 +1,5 @@
 const express = require("express");
-const { authValidator } = require("../utils/AuthValidator");
+const { authValidator } = require("../middleware/AuthValidator");
 const connectionRequest = require("../models/connectionSchema");
 const requestRouter = express.Router();
 const Users = require("../models/userSchema");
