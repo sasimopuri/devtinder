@@ -1,15 +1,22 @@
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../utils/userSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { BASE_URL, DEFAULT_USER_IMG } from "../utils/constants";
+import axios from "axios";
 
 const Nav = () => {
   const user = useSelector((state) => state.user);
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   console.log("user", user);
-  function handleLogout(){
-    dispatch(removeUser())
-    navigate("/login")
+  async function handleLogout() {
+    try {
+      await axios.get(BASE_URL + "logout", { withCredentials: true });
+      dispatch(removeUser());
+      navigate("/login")
+    } catch (err) {
+      console.log(err);
+    }
   }
   return (
     <div className="navbar bg-base-100 shadow-sm">
@@ -27,11 +34,7 @@ const Nav = () => {
             <div className="w-10 rounded-full">
               <img
                 alt="Tailwind CSS Navbar component"
-                src={
-                  user?.photoUrl
-                    ? user?.photoUrl
-                    : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                }
+                src={user?.photoUrl ? user?.photoUrl : DEFAULT_USER_IMG}
               />
             </div>
           </div>
