@@ -28,19 +28,25 @@ authRouter.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     validateSignInData(req.body);
-    const user = await Users.findOne({ email });
-    if (!user) {
+    const userObj = await Users.findOne({ email });
+    if (!userObj) {
       throw new Error("Email is not registered!");
     }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, userObj.password);
     if (!isPasswordValid) {
       throw new Error("Incorrect password");
     }
-    const token = await user.getJWT();
+    
+    const token = await userObj.getJWT();
     res.cookie("token", token, {
       expires: new Date(Date.now() + 7 * 24 * 3600000),
     });
-    res.send("Logged in successfully!");
+    const user = userObj.toObject()
+    delete user.password
+    res.json({
+      message: "Login successfully",
+      user
+    });
   } catch (err) {
     console.log("Error", err);
     res.status(400).send(err.message);
