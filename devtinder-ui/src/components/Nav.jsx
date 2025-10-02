@@ -27,7 +27,7 @@ const Nav = () => {
         <Link to="connections" className="btn btn-ghost text-md rounded-lg">Connections</Link>
       </div>
       <div className="flex">
-        <Link to="myrequests" className="btn btn-ghost text-md rounded-lg">Pending Requests</Link>
+        <Link to="/incomingrequests" className="btn btn-ghost text-md rounded-lg">Incomming Requests</Link>
       </div>
       {/* <div className="flex">
         <a className="btn btn-ghost text-md rounded-lg">DevTinder</a>
