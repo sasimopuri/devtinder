@@ -3,6 +3,7 @@ import { removeUser } from "../utils/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL, DEFAULT_USER_IMG } from "../utils/constants";
 import axios from "axios";
+import EditUserDetails from "./EditUserDetails";
 
 const Nav = () => {
   const user = useSelector((state) => state.user);
@@ -11,9 +12,9 @@ const Nav = () => {
   console.log("user", user);
   async function handleLogout() {
     try {
-      await axios.get(BASE_URL + "logout", { withCredentials: true });
+      await axios.get(BASE_URL + "/logout", { withCredentials: true });
       dispatch(removeUser());
-      navigate("/login")
+      navigate("/login");
     } catch (err) {
       console.log(err);
     }
@@ -43,7 +44,16 @@ const Nav = () => {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-24 p-2 shadow"
           >
             <li>
-              <a>Profile</a>
+              <Link>
+                <button
+                  className="btn"
+                  onClick={() =>
+                    document.getElementById("my_modal_1").showModal()
+                  }
+                >
+                  Profile
+                </button>
+              </Link>
             </li>
             <li>
               <a>Settings</a>
@@ -53,6 +63,9 @@ const Nav = () => {
             </li>
           </ul>
         </div>
+        <dialog id="my_modal_1" className="modal">
+          <EditUserDetails user={user}/>
+        </dialog>
       </div>
     </div>
   );
