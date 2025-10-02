@@ -8,6 +8,7 @@ const userRouter = express.Router();
 const USER_FEILDS = [
   "firstName",
   "lastName",
+  "photoUrl",
   "gender",
   "age",
   "skills",
@@ -78,6 +79,7 @@ userRouter.get("/getConnections", authValidator, async (req, res) => {
 });
 
 userRouter.get("/feed/:page/:limit", authValidator, async (req, res) => {
+  console.log("Helll");
   try {
     const { page, limit } = req.params;
     const currentUser = req.user;
@@ -87,16 +89,15 @@ userRouter.get("/feed/:page/:limit", authValidator, async (req, res) => {
       .find({
         $or: [{ fromUserId: currentUser._id }, { toUserId: currentUser._id }],
       })
-      .select("fromUserId, toUserId");
+      .select("fromUserId toUserId");
     const avoidUsersInFeed = new Set();
     avoidUsersInFeed.add(currentUser._id);
     allConnections.forEach((user) => {
-      avoidUsersInFeed.add(user.fromUserId);
-      avoidUsersInFeed.add(user.toUserId);
+      avoidUsersInFeed.add(user?.fromUserId?.toString());
+      avoidUsersInFeed.add(user?.toUserId?.toString());
     });
-
     const allUsers = await Users.find({
-      $and: [{ _id: { $nin: Array.from(avoidUsersInFeed) } }],
+      _id: { $nin: Array.from(avoidUsersInFeed) },
     })
       .select(USER_FEILDS)
       .skip(skipValue)
