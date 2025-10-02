@@ -72,16 +72,15 @@ const EditUserDetails = ({ user }) => {
               {userData?.firstName + " " + userData?.lastName}
             </h2>
             <div className="flex overflow-auto">
-              <p>Email: {userData?.email}</p>
-              <p>Age: {userData?.age}</p>
+              <p><span className="font-semibold">Email:</span> {userData?.email}</p>
+              <p><span className="font-semibold">Age:</span>  {userData?.age}</p>
               <p>
-                Gender:{" "}
+                <span className="font-semibold">Gender:{" "}</span>
                 {userData?.gender[0].toUpperCase() + userData?.gender.slice(1)}
               </p>
             </div>
-            <p>Skills:{userData?.skills ? userData?.skills : " None"}</p>
-            <p>{userData?.skills && userData.skills}</p>
-            <p className="-mt-2">Description: {userData?.description}</p>
+            <p><span className="font-semibold">Skills: </span> {userData?.skills ? userData?.skills : " None"}</p>
+            <p className=""><span className="font-semibold">Description: </span>{userData?.description}</p>
           </div>
         </div>
       ) : (
