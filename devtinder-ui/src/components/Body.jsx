@@ -12,7 +12,7 @@ const Body = () => {
   const user = useSelector((state) => state.user);
   const getUserDetails = async () => {
     try {
-      const response = await axios.get(BASE_URL + "profile/getProfile", {
+      const response = await axios.get(BASE_URL + "/profile/getProfile", {
         withCredentials: true,
       });
       dispatch(addUser(response?.data));
