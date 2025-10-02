@@ -9,7 +9,6 @@ const Nav = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log("user", user);
   async function handleLogout() {
     try {
       await axios.get(BASE_URL + "/logout", { withCredentials: true });
