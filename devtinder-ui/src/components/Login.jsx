@@ -8,6 +8,7 @@ import { BASE_URL } from "../utils/constants";
 const Login = () => {
   const [email, setEmail] = useState("sasi@gmail.com");
   const [password, setPassword] = useState("Abc@12345");
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -24,7 +25,11 @@ const Login = () => {
       dispatch(addUser(response.data.user));
       navigate("/");
     } catch (err) {
-      console.log("Error");
+      console.log("Error", err?.response?.data);
+      setError(err?.response?.data);
+      setTimeout(()=>{
+        setError(null)
+      },3000)
     }
   }
 
@@ -48,8 +53,25 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-
-        <button className="btn btn-neutral mt-4" onClick={handleLogin}>
+        {error && (
+          <div role="alert" className="alert alert-error text-white ">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 shrink-0 stroke-current"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{error}</span>
+          </div>
+        )}
+        <button className="btn btn-neutral" onClick={handleLogin}>
           Login
         </button>
       </fieldset>
