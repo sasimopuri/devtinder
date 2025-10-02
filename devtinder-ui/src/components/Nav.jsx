@@ -43,18 +43,17 @@ const Nav = () => {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-24 p-2 shadow"
           >
-            <li>
-              <Link>
+            <Link>
+              <li>
                 <button
-                  className="btn"
                   onClick={() =>
                     document.getElementById("my_modal_1").showModal()
                   }
                 >
                   Profile
                 </button>
-              </Link>
-            </li>
+              </li>
+            </Link>
             <li>
               <a>Settings</a>
             </li>
@@ -64,7 +63,7 @@ const Nav = () => {
           </ul>
         </div>
         <dialog id="my_modal_1" className="modal">
-          <EditUserDetails user={user}/>
+          <EditUserDetails user={user} />
         </dialog>
       </div>
     </div>
