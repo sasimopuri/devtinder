@@ -21,9 +21,18 @@ const Nav = () => {
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">DevTinder</a>
+        <Link to="/" className="btn btn-ghost text-xl rounded-lg">DevTinder</Link>
       </div>
-      <div className="flex gap-2 items-center mr-8">
+      <div className="flex">
+        <Link to="connections" className="btn btn-ghost text-md rounded-lg">Connections</Link>
+      </div>
+      <div className="flex">
+        <Link to="myrequests" className="btn btn-ghost text-md rounded-lg">Pending Requests</Link>
+      </div>
+      {/* <div className="flex">
+        <a className="btn btn-ghost text-md rounded-lg">DevTinder</a>
+      </div> */}
+      <div className="flex gap-2 items-center mx-8">
         <h1>Welcome {user?.firstName}</h1>
         <div className="dropdown dropdown-end">
           <div
@@ -53,9 +62,6 @@ const Nav = () => {
                 </button>
               </li>
             </Link>
-            <li>
-              <a>Settings</a>
-            </li>
             <li>
               <a onClick={handleLogout}>Logout</a>
             </li>
