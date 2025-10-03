@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
-  const [email, setEmail] = useState("sasi@gmail.com");
-  const [password, setPassword] = useState("Abc@12345");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ const Login = () => {
         <label className="label">Email</label>
         <input
           type="email"
-          className="input"
+          className="input rounded-lg"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -48,7 +48,7 @@ const Login = () => {
         <label className="label">Password</label>
         <input
           type="password"
-          className="input"
+          className="input rounded-lg"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -71,9 +71,10 @@ const Login = () => {
             <span>{error}</span>
           </div>
         )}
-        <button className="btn btn-neutral" onClick={handleLogin}>
+        <button className="btn btn-neutral rounded-lg mt-1" onClick={handleLogin}>
           Login
         </button>
+      <div className="font-semibold badge badge-ghost rounded-lg ml-12"><Link to="/signup" >No Account? {" "} Signup now!</Link></div>
       </fieldset>
     </div>
   );
