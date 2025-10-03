@@ -11,7 +11,7 @@ import {
 const IncomingRequests = () => {
   const requests = useSelector((state) => state?.incommingRequests);
 
-  const count= requests?.length
+  const count = requests?.length;
   const dispatch = useDispatch();
 
   const reviewRequest = async (status, id) => {
@@ -45,9 +45,6 @@ const IncomingRequests = () => {
   useEffect(() => {
     fetchIncommingRequests();
   }, []);
-  if (count === 0) {
-    return <div>No Reqyesu</div>;
-  }
 
   const connectionRequests = requests?.map((req) => (
     <ConnectionsList
@@ -56,7 +53,22 @@ const IncomingRequests = () => {
       reviewRequest={reviewRequest}
     />
   ));
-  return count === 0 ? <>Hell</> : <>{connectionRequests}</>;
+  return count === 0 ? (
+    <>
+      {" "}
+      <div className="flex flex-col items-center mt-6 ">
+        <div className="card-body">
+          <h2 className="card-title">
+            No matches yet!
+          </h2>
+          <div className="font-semibold">Don't worry, the perfect connection is out there.
+            Keep exploring, we'll let you know the moment someone reaches out!</div>
+        </div>
+      </div>
+    </>
+  ) : (
+    <>{connectionRequests}</>
+  );
 };
 
 export default IncomingRequests;
