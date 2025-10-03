@@ -84,7 +84,7 @@ userRouter.get("/feed/:page/:limit", authValidator, async (req, res) => {
     const { page, limit } = req.params;
     const currentUser = req.user;
     const limitValue = limit > 50 ? 50 : limit;
-    const skipValue = (page - 1) * limitValue;
+    const skipValue = (page - 1);
     const allConnections = await connectionRequest
       .find({
         $or: [{ fromUserId: currentUser._id }, { toUserId: currentUser._id }],
@@ -103,7 +103,10 @@ userRouter.get("/feed/:page/:limit", authValidator, async (req, res) => {
       .skip(skipValue)
       .limit(limitValue);
     if (!allUsers || !allUsers.length > 0) {
-      return res.status(404).send("No Users found");
+      return res.status(200).json({
+        count:0,
+        allUsers:[]
+      })
     }
 
     res.json({
