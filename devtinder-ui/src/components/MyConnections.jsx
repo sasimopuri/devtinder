@@ -7,14 +7,22 @@ import { Link } from "react-router-dom";
 const MyConnections = () => {
   const [connections, setConnections] = useState([]);
   const [isConnectionsExist, setIsConnectionsExist] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const fetchMyConnections = async () => {
+    try{
+      setIsLoading(true)
     const response = await axios.get(BASE_URL + "/user/getConnections", {
       withCredentials: true,
     });
     // console.log("res",connections);
     response?.data?.count > 0 && setIsConnectionsExist(true);
     setConnections(response?.data?.data);
-    console.log(response?.data?.data);
+    setIsLoading(false)
+    }
+    catch (err){
+      console.log("Error",err);
+      setIsLoading(false)
+    }
   };
   useEffect(() => {
     fetchMyConnections();
@@ -25,6 +33,14 @@ const MyConnections = () => {
     connections?.map((connection) => (
       <ConnectionsList connection={connection} />
     ));
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center mt-30">
+        <span className="loading loading-dots loading-md"></span>
+      </div>
+    );
+  }
 
   return (
     <>
